@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sucesso RH - Conectando Talentos, Impulsionando Negócios</title>
+    <meta name="description" content="A Sucesso RH é sua parceira estratégica em Gestão de Pessoas, oferecendo soluções completas em Recrutamento e Seleção, Consultoria, Desenvolvimento e muito mais.">
+    <meta name="keywords" content="RH, Recursos Humanos, Recrutamento, Seleção, Gestão de Pessoas, Consultoria RH">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
+    <style>
+        /* Custom styles inspired by the brand manual */
+        :root {
+            --primary-blue: #1C4D96;
+            --accent-blue: #266EDB;
+            --light-blue: #5A8BDB;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, h4, .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .bg-primary { background-color: var(--primary-blue); }
+        .text-primary { color: var(--primary-blue); }
+        .border-primary { border-color: var(--primary-blue); }
+        
+        .bg-accent { background-color: var(--accent-blue); }
+        .text-accent { color: var(--accent-blue); }
+
+        .bg-light-blue { background-color: var(--light-blue); }
+
+        .cta-button {
+            @apply bg-accent text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-transform duration-300 hover:bg-light-blue hover:scale-105;
+        }
+
+        .nav-link {
+            @apply text-white hover:text-gray-300 transition-colors duration-200 text-sm font-medium;
+        }
+        
+        /* Animation for sections */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Elegant Pulse Animation for Hero CTA --- */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+        }
+        .cta-pulse {
+            animation: pulse 2s infinite;
+        }
+
+
+        /* --- Definitive Modal Styles for Pop-up --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 1.5rem; /* p-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-2xl */
+            max-width: 56rem; /* max-w-3xl */
+            width: 91.666667%; /* w-11/12 */
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        @media (min-width: 768px) {
+            .modal-content {
+                padding: 2rem; /* md:p-8 */
+            }
+        }
+
+        .modal-overlay.open .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 1rem; /* top-4 */
+            right: 1rem; /* right-4 */
+            color: #6b7280; /* text-gray-500 */
+            font-size: 1.875rem; /* text-3xl */
+            line-height: 1;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .modal-close-button:hover {
+            color: #1f2937; /* hover:text-gray-800 */
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header -->
+    <header id="header" class="bg-primary text-white p-4 fixed w-full z-40 transition-shadow duration-300">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#home">
+                <img src="https://i.postimg.cc/h4Vf5H4z/logosucesso.png" alt="Logotipo Sucesso RH" class="h-10">
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden lg:flex items-center space-x-6">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#quem-somos" class="nav-link">Quem Somos</a>
+                <a href="#servicos" class="nav-link">Serviços</a>
+                <a href="#vagas" class="nav-link">Vagas</a>
+                <a href="#ouvidoria-pesquisa" class="nav-link">Canais</a>
+                <a href="#blog" class="nav-link">Blog</a>
+                <a href="#contato" class="nav-link">Contato</a>
+            </nav>
+            
+            <a href="https://sucessorh.github.io/recrutamentoeselecao/" target="_blank" class="hidden lg:inline-block cta-button text-sm">Candidatar-se às Vagas</a>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="lg:hidden text-white focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="hidden lg:hidden mt-4">
+            <nav class="flex flex-col space-y-3 px-4">
+                <a href="#home" class="nav-link text-base">Home</a>
+                <a href="#quem-somos" class="nav-link text-base">Quem Somos</a>
+                <a href="#servicos" class="nav-link text-base">Serviços</a>
+                <a href="#vagas" class="nav-link text-base">Vagas</a>
+                <a href="#ouvidoria-pesquisa" class="nav-link text-base">Canais de Comunicação</a>
+                <a href="#blog" class="nav-link text-base">Blog</a>
+                <a href="#contato" class="nav-link text-base">Contato</a>
+                <a href="https://sucessorh.github.io/recrutamentoeselecao/" target="_blank" class="cta-button text-center mt-4">Candidatar-se</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- Hero Section -->
+        <section id="home" class="relative min-h-screen flex items-center justify-center text-white bg-cover bg-center pt-16" style="background-image: url('https://i.postimg.cc/Tw9Bydq5/Gemini-Generated-Image-8xmpei8xmpei8xmp.png');">
+            <div class="absolute inset-0 bg-primary opacity-60"></div>
+            <div class="container mx-auto text-center z-10 px-4">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg leading-tight">Conectando Talentos, <br> Impulsionando o Sucesso do Seu Negócio.</h1>
+                <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto drop-shadow-md">Sua parceira estratégica para um futuro de crescimento e inovação em Recursos Humanos.</p>
+                <div class="flex justify-center items-center">
+                    <a href="https://sucessorh.github.io/recrutamentoeselecao/" target="_blank" class="bg-white text-primary border-2 border-primary font-bold py-3 px-8 rounded-lg shadow-lg transition-transform duration-300 hover:bg-gray-100 hover:scale-105 text-lg cta-pulse">Acessar Central de Vagas</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quem Somos Section -->
+        <section id="quem-somos" class="py-20 bg-white fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="rounded-lg shadow-2xl overflow-hidden">
+                        <img src="https://i.postimg.cc/3x59TMms/business-team-concept.jpg" alt="Equipe da Sucesso RH em colaboração" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-bold text-primary mb-4">Sobre a Sucesso RH</h2>
+                        <p class="mb-4 text-gray-600">Na Sucesso RH, acreditamos que o capital humano é o maior ativo de uma organização. Nossa missão é identificar e desenvolver talentos, criando equipes de alta performance que geram resultados extraordinários.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="text-xl font-semibold text-accent flex items-center"><i data-lucide="gem" class="w-5 h-5 mr-2"></i>Missão</h3>
+                                <p class="text-gray-600">Ser o elo estratégico entre profissionais e empresas, promovendo conexões que geram crescimento mútuo e ambientes de trabalho positivos.</p>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-accent flex items-center"><i data-lucide="eye" class="w-5 h-5 mr-2"></i>Visão</h3>
+                                <p class="text-gray-600">Tornar-se referência em soluções de Recursos Humanos, reconhecida pela excelência, inovação e pelo impacto positivo na carreira das pessoas e no sucesso das empresas.</p>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-accent flex items-center"><i data-lucide="shield-check" class="w-5 h-5 mr-2"></i>Valores</h3>
+                                <p class="text-gray-600">Ética, Transparência, Inovação, Parceria e Compromisso com Resultados.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Serviços Section -->
+        <section id="servicos" class="py-20 bg-gray-50 fade-in-section">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl font-bold text-primary mb-2">Nossas Soluções em RH</h2>
+                <p class="text-gray-600 mb-12 max-w-2xl mx-auto">Oferecemos um portfólio completo de serviços para atender todas as necessidades da sua empresa.</p>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Service Card 1 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 text-center">
+                        <div class="bg-accent text-white rounded-full p-4 inline-block mb-4">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-primary mb-2">Recrutamento & Seleção</h3>
+                        <p class="text-gray-600">Atraímos e selecionamos os melhores talentos do mercado, alinhados à cultura e aos objetivos do seu negócio.</p>
+                    </div>
+                    <!-- Service Card 2 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 text-center">
+                        <div class="bg-accent text-white rounded-full p-4 inline-block mb-4">
+                            <i data-lucide="briefcase"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-primary mb-2">Consultoria em RH</h3>
+                        <p class="text-gray-600">Diagnóstico e implementação de soluções estratégicas para otimizar seus processos de gestão de pessoas.</p>
+                    </div>
+                    <!-- Service Card 3 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 text-center">
+                        <div class="bg-accent text-white rounded-full p-4 inline-block mb-4">
+                            <i data-lucide="trending-up"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-primary mb-2">Programas de Desenvolvimento</h3>
+                        <p class="text-gray-600">Capacitamos suas equipes e lideranças com treinamentos focados em competências essenciais e alta performance.</p>
+                    </div>
+                    <!-- Service Card 4 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 text-center">
+                        <div class="bg-accent text-white rounded-full p-4 inline-block mb-4">
+                            <i data-lucide="clipboard-check"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-primary mb-2">Gestão de Pessoas</h3>
+                        <p class="text-gray-600">Oferecemos suporte completo na administração de pessoal, desde a folha de pagamento até políticas internas de RH.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vagas Abertas Section -->
+        <section id="vagas" class="py-20 bg-cover bg-center text-white fade-in-section relative" style="background-image: url('https://i.postimg.cc/TPG6h4MS/Gemini-Generated-Image-49cdtb49cdtb49cd.png');">
+            <div class="absolute inset-0 bg-primary opacity-70"></div>
+            <div class="container mx-auto px-6 text-center z-10 relative">
+                <h2 class="text-4xl font-bold mb-4">Sua Carreira Decola Aqui.</h2>
+                <p class="mb-8 max-w-3xl mx-auto text-lg">Conectamos você às melhores oportunidades do mercado. Nosso processo valoriza suas habilidades e potencial. Dê o próximo passo na sua jornada profissional conosco.</p>
+                <a href="https://sucessorh.github.io/recrutamentoeselecao/" target="_blank" class="bg-white text-primary border-2 border-primary font-bold py-3 px-8 rounded-lg shadow-lg transition-transform duration-300 hover:bg-gray-100 hover:scale-105 text-lg">Ver Vagas e Candidatar-se Agora</a>
+            </div>
+        </section>
+        
+        <!-- Ouvidoria & Pesquisa Section -->
+        <section id="ouvidoria-pesquisa" class="py-20 bg-white fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-2 gap-10">
+                    <!-- Ouvidoria -->
+                    <div class="bg-gray-100 p-8 rounded-lg text-center flex flex-col items-center">
+                        <h3 class="text-2xl font-bold text-primary mb-3">Ouvidoria</h3>
+                        <p class="text-gray-600 mb-6">Este é um canal seguro e sigiloso para suas dúvidas, sugestões ou relatos. Sua voz é fundamental para nossa melhoria contínua.</p>
+                        <a href="https://sucessorh.github.io/ouvidoriasucessorh/" target="_blank" class="font-bold text-accent hover:underline mt-auto">Acessar Ouvidoria <i data-lucide="arrow-right" class="inline-block w-4 h-4"></i></a>
+                    </div>
+                    <!-- Pesquisa de Satisfação -->
+                    <div class="bg-gray-100 p-8 rounded-lg text-center flex flex-col items-center">
+                        <h3 class="text-2xl font-bold text-primary mb-3">Pesquisa de Satisfação</h3>
+                        <p class="text-gray-600 mb-6">Sua opinião nos ajuda a aprimorar nossos serviços. Dedique um momento para compartilhar sua experiência conosco!</p>
+                        <a href="https://sucessorh.github.io/pesquisainternasucessor/" target="_blank" class="font-bold text-accent hover:underline mt-auto">Participar da Pesquisa <i data-lucide="arrow-right" class="inline-block w-4 h-4"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Section -->
+        <section id="blog" class="py-20 bg-gray-50 fade-in-section">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-primary mb-12 text-center">Blog Sucesso RH</h2>
+                <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Blog Post 1 -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                        <img src="https://placehold.co/600x400/1C4D96/FFFFFF?text=RH+Estrategico" alt="Imagem do post sobre processo seletivo" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-primary mb-2">5 Dicas para um Processo Seletivo Eficaz</h3>
+                            <p class="text-gray-600 mb-4 line-clamp-3">Otimize sua contratação com estratégias que atraem os melhores candidatos e garantem a escolha certa para sua equipe.</p>
+                            <button data-modal-target="blog-modal-1" class="font-bold text-accent hover:underline modal-open-button">Ler mais <i data-lucide="arrow-right" class="inline-block w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                    <!-- Blog Post 2 -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                        <img src="https://placehold.co/600x400/266EDB/FFFFFF?text=Cultura" alt="Imagem do post sobre cultura organizacional" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-primary mb-2">A Importância da Cultura Organizacional</h3>
+                            <p class="text-gray-600 mb-4 line-clamp-3">Entenda como uma cultura forte impacta a produtividade, a retenção de talentos e o sucesso do seu negócio.</p>
+                            <button data-modal-target="blog-modal-2" class="font-bold text-accent hover:underline modal-open-button">Ler mais <i data-lucide="arrow-right" class="inline-block w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                    <!-- Blog Post 3 -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                        <img src="https://placehold.co/600x400/5A8BDB/FFFFFF?text=Lideranca" alt="Imagem do post sobre liderança" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-primary mb-2">Liderança 4.0: Habilidades Essenciais</h3>
+                            <p class="text-gray-600 mb-4 line-clamp-3">Descubra as competências que os líderes do futuro precisam para guiar equipes na era digital com agilidade e empatia.</p>
+                            <button data-modal-target="blog-modal-3" class="font-bold text-accent hover:underline modal-open-button">Ler mais <i data-lucide="arrow-right" class="inline-block w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                    <!-- Blog Post 4 -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                        <img src="https://placehold.co/600x400/1C4D96/FFFFFF?text=Onboarding" alt="Imagem do post sobre onboarding remoto" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-primary mb-2">Onboarding Remoto: Como Integrar Talentos</h3>
+                            <p class="text-gray-600 mb-4 line-clamp-3">Aprenda a criar uma experiência de integração memorável e eficaz para novos colaboradores que trabalham à distância.</p>
+                            <button data-modal-target="blog-modal-4" class="font-bold text-accent hover:underline modal-open-button">Ler mais <i data-lucide="arrow-right" class="inline-block w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                    <!-- Blog Post 5 -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                        <img src="https://placehold.co/600x400/266EDB/FFFFFF?text=Feedback" alt="Imagem do post sobre feedback contínuo" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-primary mb-2">Feedback Contínuo: O Motor do Desenvolvimento</h3>
+                            <p class="text-gray-600 mb-4 line-clamp-3">Saia do modelo anual e adote uma cultura de feedback constante que acelera o crescimento individual e da equipe.</p>
+                            <button data-modal-target="blog-modal-5" class="font-bold text-accent hover:underline modal-open-button">Ler mais <i data-lucide="arrow-right" class="inline-block w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                    <!-- Blog Post 6 -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                        <img src="https://placehold.co/600x400/5A8BDB/FFFFFF?text=Saude+Mental" alt="Imagem do post sobre saúde mental no trabalho" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-primary mb-2">Saúde Mental no Trabalho: Responsabilidade de Todos</h3>
+                            <p class="text-gray-600 mb-4 line-clamp-3">Estratégias para promover um ambiente de trabalho psicologicamente seguro e apoiar o bem-estar dos colaboradores.</p>
+                            <button data-modal-target="blog-modal-6" class="font-bold text-accent hover:underline modal-open-button">Ler mais <i data-lucide="arrow-right" class="inline-block w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contato Section -->
+        <section id="contato" class="py-20 bg-white fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <div>
+                        <h2 class="text-3xl font-bold text-primary mb-4">Entre em Contato</h2>
+                        <p class="text-gray-600 mb-8">Estamos prontos para entender suas necessidades e criar soluções personalizadas. Fale conosco!</p>
+                        <form id="contact-form" class="space-y-4">
+                            <div>
+                                <label for="name" class="sr-only">Nome</label>
+                                <input type="text" id="name" name="name" placeholder="Seu Nome" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-accent" required>
+                            </div>
+                            <div>
+                                <label for="email" class="sr-only">E-mail</label>
+                                <input type="email" id="email" name="email" placeholder="Seu E-mail" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-accent" required>
+                            </div>
+                            <div>
+                                <label for="message" class="sr-only">Mensagem</label>
+                                <textarea id="message" name="message" rows="5" placeholder="Sua Mensagem" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-accent" required></textarea>
+                            </div>
+                            <button type="submit" class="cta-button w-full">Enviar Mensagem</button>
+                        </form>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-accent text-white p-3 rounded-full"><i data-lucide="mail"></i></div>
+                            <div>
+                                <h4 class="font-semibold text-primary">E-mail</h4>
+                                <a href="mailto:comercial@sucessorh.com.br" class="text-gray-600 hover:text-accent">comercial@sucessorh.com.br</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-accent text-white p-3 rounded-full"><i data-lucide="phone"></i></div>
+                            <div>
+                                <h4 class="font-semibold text-primary">Telefone</h4>
+                                <p class="text-gray-600">(92) 99168-7875 / (92) 99147-2200</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                             <div class="bg-accent text-white p-3 rounded-full"><i data-lucide="map-pin"></i></div>
+                            <div>
+                                <h4 class="font-semibold text-primary">Endereço</h4>
+                                <p class="text-gray-600">Av. Tefé, 4265 - Japiim, Manaus - AM, Brasil</p>
+                            </div>
+                        </div>
+                        <div class="rounded-lg overflow-hidden shadow-lg h-64">
+                             <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!m12!1m3!1d3983.841553909786!2d-59.9882986852425!3d-3.137452997722718!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x926c19f1b0a701a3%3A0x63e69f1681a95781!2sAv.%20Tef%C3%A9%2C%204265%20-%20Japiim%2C%20Manaus%20-%20AM%2C%2069078-000!5e0!3m2!1spt-BR!2sbr!4v1663000000000!5m2!1spt-BR!2sbr" 
+                                width="100%" 
+                                height="100%" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-primary text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <img src="https://i.postimg.cc/h4Vf5H4z/logosucesso.png" alt="Logotipo Sucesso RH" class="h-12 mx-auto mb-6">
+            <div class="flex justify-center space-x-6 mb-6">
+                <a href="#home" class="hover:text-gray-300">Home</a>
+                <a href="#quem-somos" class="hover:text-gray-300">Quem Somos</a>
+                <a href="#servicos" class="hover:text-gray-300">Serviços</a>
+                <a href="#vagas" class="hover:text-gray-300">Vagas</a>
+                <a href="#blog" class="hover:text-gray-300">Blog</a>
+                <a href="#contato" class="hover:text-gray-300">Contato</a>
+            </div>
+            <div class="flex justify-center space-x-6 mb-8">
+                <!-- Replace with your social media links -->
+                <a href="#" class="hover:text-gray-300"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="#" class="hover:text-gray-300"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="#" class="hover:text-gray-300"><i data-lucide="linkedin" class="w-6 h-6"></i></a>
+            </div>
+            <p class="text-sm text-gray-400">&copy; 2024 Sucesso RH. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Blog Modals Container -->
+    <div id="modal-container">
+        <!-- Modal 1 -->
+        <div id="blog-modal-1" class="modal-overlay">
+            <div class="modal-content">
+                <span class="modal-close-button">&times;</span>
+                <h2 class="text-2xl font-bold text-primary mb-4">5 Dicas para um Processo Seletivo Eficaz</h2>
+                <img src="https://placehold.co/600x400/1C4D96/FFFFFF?text=RH+Estrategico" alt="Imagem do post" class="w-full h-64 object-cover rounded-lg mb-4">
+                <div class="prose max-w-none text-gray-700 space-y-4">
+                    <p>Otimizar sua contratação com estratégias que atraem os melhores candidatos e garantem a escolha certa para sua equipe é fundamental. Um processo seletivo bem estruturado não só economiza tempo e recursos, mas também impacta diretamente a produtividade e o clima organizacional.</p>
+                    <p><strong>1. Defina o Perfil Ideal:</strong> Antes de divulgar a vaga, tenha clareza sobre as competências técnicas (hard skills) e comportamentais (soft skills) necessárias. Envolva o gestor da área na definição desse perfil para garantir alinhamento.</p>
+                    <p><strong>2. Divulgue nos Canais Certos:</strong> Onde seu candidato ideal está? LinkedIn, sites especializados, indicações internas? Use os canais mais eficazes para o seu público-alvo.</p>
+                    <p><strong>3. Estruture as Entrevistas:</strong> Use uma combinação de entrevistas comportamentais e testes práticos. Perguntas baseadas em situações passadas ("Conte-me sobre uma vez que...") são ótimas para prever o comportamento futuro.</p>
+                    <p><strong>4. Mantenha a Comunicação:</strong> Mantenha os candidatos informados sobre o andamento do processo. Um feedback, mesmo que negativo, fortalece sua marca empregadora.</p>
+                    <p><strong>5. Verifique as Referências:</strong> Uma checagem de referências bem-feita pode confirmar as impressões da entrevista e revelar informações valiosas sobre o candidato.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Modal 2 -->
+        <div id="blog-modal-2" class="modal-overlay">
+            <div class="modal-content">
+                <span class="modal-close-button">&times;</span>
+                <h2 class="text-2xl font-bold text-primary mb-4">A Importância da Cultura Organizacional</h2>
+                <img src="https://placehold.co/600x400/266EDB/FFFFFF?text=Cultura" alt="Imagem do post" class="w-full h-64 object-cover rounded-lg mb-4">
+                <div class="prose max-w-none text-gray-700">
+                    <p>A cultura organizacional é o conjunto de valores, crenças e comportamentos que moldam a identidade de uma empresa. É "como as coisas são feitas por aqui". Uma cultura forte e positiva é um diferencial competitivo poderoso. Ela atrai e retém talentos, engaja colaboradores, promove a inovação e melhora o desempenho geral da organização. Investir na cultura não é um custo, é um investimento no maior ativo da empresa: as pessoas.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Modal 3 -->
+        <div id="blog-modal-3" class="modal-overlay">
+            <div class="modal-content">
+                 <span class="modal-close-button">&times;</span>
+                <h2 class="text-2xl font-bold text-primary mb-4">Liderança 4.0: Habilidades Essenciais</h2>
+                 <img src="https://placehold.co/600x400/5A8BDB/FFFFFF?text=Lideranca" alt="Imagem do post" class="w-full h-64 object-cover rounded-lg mb-4">
+                <div class="prose max-w-none text-gray-700">
+                    <p>A Indústria 4.0 exige um novo perfil de liderança. O líder 4.0 precisa ir além da gestão de tarefas e focar em inspirar e desenvolver pessoas. As habilidades essenciais incluem: inteligência emocional, agilidade de aprendizado, pensamento crítico, comunicação eficaz, capacidade de gerir equipes remotas e, acima de tudo, empatia. Esse líder atua como um facilitador, criando um ambiente seguro para a experimentação e o crescimento contínuo.</p>
+                </div>
+            </div>
+        </div>
+         <!-- Modal 4 -->
+         <div id="blog-modal-4" class="modal-overlay">
+            <div class="modal-content">
+                <span class="modal-close-button">&times;</span>
+                <h2 class="text-2xl font-bold text-primary mb-4">Onboarding Remoto: Como Integrar Talentos</h2>
+                <img src="https://placehold.co/600x400/1C4D96/FFFFFF?text=Onboarding" alt="Imagem do post" class="w-full h-64 object-cover rounded-lg mb-4">
+                <div class="prose max-w-none text-gray-700">
+                    <p>Integrar um novo colaborador à distância é um desafio, mas com planejamento é possível criar uma experiência positiva e eficaz. Estruture um cronograma para a primeira semana, envie um kit de boas-vindas com os equipamentos necessários e alguns "mimos" da empresa, agende reuniões virtuais de apresentação com a equipe e defina um "buddy" (colega-guia) para auxiliar nos primeiros dias. A comunicação clara e constante é a chave para o sucesso do onboarding remoto.</p>
+                </div>
+            </div>
+        </div>
+         <!-- Modal 5 -->
+         <div id="blog-modal-5" class="modal-overlay">
+            <div class="modal-content">
+                <span class="modal-close-button">&times;</span>
+                <h2 class="text-2xl font-bold text-primary mb-4">Feedback Contínuo: O Motor do Desenvolvimento</h2>
+                <img src="https://placehold.co/600x400/266EDB/FFFFFF?text=Feedback" alt="Imagem do post" class="w-full h-64 object-cover rounded-lg mb-4">
+                <div class="prose max-w-none text-gray-700">
+                    <p>O modelo de avaliação de desempenho anual está ultrapassado. As equipes de hoje, especialmente as mais jovens, anseiam por feedback regular e em tempo real. A cultura de feedback contínuo, baseada em conversas francas e construtivas (one-on-ones), acelera o desenvolvimento, corrige rotas rapidamente, aumenta o engajamento e fortalece a relação entre líderes e liderados. O feedback deve ser uma via de mão dupla, focado tanto em pontos de melhoria quanto em reconhecimento.</p>
+                </div>
+            </div>
+        </div>
+         <!-- Modal 6 -->
+         <div id="blog-modal-6" class="modal-overlay">
+            <div class="modal-content">
+                <span class="modal-close-button">&times;</span>
+                <h2 class="text-2xl font-bold text-primary mb-4">Saúde Mental no Trabalho: Responsabilidade de Todos</h2>
+                <img src="https://placehold.co/600x400/5A8BDB/FFFFFF?text=Saude+Mental" alt="Imagem do post" class="w-full h-64 object-cover rounded-lg mb-4">
+                <div class="prose max-w-none text-gray-700">
+                    <p>Promover a saúde mental no ambiente de trabalho vai além de oferecer benefícios. Envolve criar uma cultura que combate o estigma, incentiva pausas, respeita o horário de trabalho e treina lideranças para identificar sinais de esgotamento (burnout) e acolher suas equipes. Ações como workshops sobre gestão de estresse, flexibilidade de horários e canais de apoio confidenciais são essenciais para construir um ambiente psicologicamente seguro onde todos possam prosperar.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lucide Icons initialization
+            lucide.createIcons();
+
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Close mobile menu when a link is clicked
+            const mobileNavLinks = mobileMenu.querySelectorAll('a');
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+            
+            // Header shadow on scroll
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('shadow-lg');
+                } else {
+                    header.classList.remove('shadow-lg');
+                }
+            });
+
+            // Contact Form Submission (demonstration)
+            const contactForm = document.getElementById('contact-form');
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Mensagem enviada com sucesso! (Funcionalidade de demonstração)');
+                contactForm.reset();
+            });
+            
+            // Fade-in animation for sections on scroll
+            const sections = document.querySelectorAll('.fade-in-section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // --- Definitive Blog Modal Logic ---
+            const openModalButtons = document.querySelectorAll('.modal-open-button');
+
+            openModalButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const modalId = button.getAttribute('data-modal-target');
+                    const modal = document.getElementById(modalId);
+                    if (modal) {
+                       document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                       modal.classList.add('open');
+                    }
+                });
+            });
+
+            const closeAllModals = () => {
+                 document.querySelectorAll('.modal-overlay').forEach(modal => {
+                    modal.classList.remove('open');
+                });
+                document.body.style.overflow = ''; // Restore background scrolling
+            }
+
+            document.querySelectorAll('.modal-close-button').forEach(button => {
+                button.addEventListener('click', closeAllModals);
+            });
+            
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                 modal.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        closeAllModals();
+                    }
+                });
+            });
+            
+            // Close modal with Escape key
+            window.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    closeAllModals();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
+
