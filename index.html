@@ -1,387 +1,615 @@
-<!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sucesso RH - 18 Anos Conectando Talentos ao Sucesso</title>
-    <meta name="description" content="Com 18 anos de excelência, a Sucesso RH oferece soluções estratégicas em recrutamento, consultoria e desenvolvimento para sua carreira e empresa.">
-    <meta name="keywords" content="RH, Recursos Humanos, Vagas, Emprego, Carreira, Recrutamento, Seleção, Consultoria RH, Manaus">
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { 
+    Gem, 
+    Eye, 
+    HeartHandshake, 
+    UsersRound, 
+    Briefcase, 
+    LineChart, 
+    ClipboardCheck, 
+    Megaphone, 
+    Smile,
+    Mail,
+    Phone,
+    MapPin,
+    ChevronRight,
+    Menu,
+    X,
+    Clock,
+    Zap,
+    Search,
+    Users,
+    BrainCircuit,
+    Award,
+    TrendingUp,
+    BookOpen,
+    Share2,
+    FileText,
+    Network
+} from 'lucide-react';
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+// --- DADOS MOCK (Conteúdo da Sucesso RH) ---
 
-    <!-- Google Fonts (Poppins para Títulos, Inter para Textos) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+const servicosData = [
+  { id: 1, icon: <UsersRound size={40} />, title: 'Recrutamento & Seleção', description: 'Atração e seleção de talentos com agilidade e precisão para todos os níveis hierárquicos.' },
+  { id: 2, icon: <Briefcase size={40} />, title: 'Consultoria em RH', description: 'Diagnóstico e implementação de estratégias de RH alinhadas aos objetivos do seu negócio.' },
+  { id: 3, icon: <LineChart size={40} />, title: 'Programas de Desenvolvimento', description: 'Treinamentos e workshops para desenvolver competências e lideranças de alta performance.' },
+  { id: 4, icon: <ClipboardCheck size={40} />, title: 'Gestão de Pessoas', description: 'Soluções para avaliação de desempenho, clima organizacional e plano de cargos e salários.' },
+];
 
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+const capsulasData = [
+    { icon: <Clock />, text: 'Seja Pontual: Demonstra respeito e comprometimento desde o início.' },
+    { icon: <Zap />, text: 'Mostre Proatividade: Não espere ordens, identifique problemas e proponha soluções.' },
+    { icon: <Search />, text: 'Pesquise a Empresa: Mostre interesse genuíno e faça perguntas inteligentes.' },
+    { icon: <Users />, text: 'Valorize o Trabalho em Equipe: Colaboração é a chave para grandes resultados.' },
+    { icon: <BrainCircuit />, text: 'Pense como o Dono: Tenha senso de responsabilidade e cuide dos recursos.' },
+    { icon: <Award />, text: 'Vá Além do Esperado: Surpreenda positivamente entregando mais valor.' },
+    { icon: <BookOpen />, text: 'Busque Conhecimento: Invista no seu desenvolvimento contínuo para se destacar.' },
+    { icon: <Share2 />, text: 'Compartilhe o que Sabe: Ensinar fortalece a equipe e seu próprio conhecimento.' },
+    { icon: <FileText />, text: 'Tenha um Currículo de Impacto: Destaque suas conquistas com números e resultados.' },
+    { icon: <Network />, text: 'Construa seu Networking: Conexões abrem portas para novas oportunidades.' },
+];
 
-    <!-- Estilos Personalizados e Animações Dinâmicas -->
-    <style>
-        :root {
-            /* Paleta de Cores Oficial - Manual de Identidade Visual */
-            --brand-dark-blue: #1C4D96;
-            --brand-light-blue: #266EDB;
-            --brand-accent: #5A8BDB;
-            
-            --bg-dark: #0F172A; /* Slate 900 - Fundo principal para alto contraste */
-            --bg-light: #F8FAFC; /* Slate 50 */
-            
-            --text-light: #F1F5F9; /* Slate 100 */
-            --text-headings-light: #FFFFFF;
-            
-            --text-dark: #0F172A; /* Slate 900 */
-            --text-dark-secondary: #475569; /* Slate 600 */
-        }
+const blogPosts = [
+  { id: 1, title: 'Dicas de Entrevista', summary: 'Prepare-se para se destacar no seu próximo processo seletivo com nossas dicas essenciais.', image: 'https://i.postimg.cc/G2RhF6T4/job-interview-candidate-selection-employment.jpg', content: "<p>Uma entrevista de emprego é sua chance de brilhar. Comece pesquisando a empresa: entenda sua cultura, produtos e valores. Prepare respostas para perguntas comuns como 'Fale sobre você' e 'Quais são seus pontos fortes e fracos?'. Use a técnica STAR (Situação, Tarefa, Ação, Resultado) para estruturar suas respostas sobre experiências passadas. Vista-se adequadamente para a cultura da empresa e, ao final, prepare perguntas inteligentes para o entrevistador. Lembre-se, a confiança é chave!</p>" },
+  { id: 2, title: 'Cultura Organizacional', summary: 'Entenda como uma cultura forte pode impulsionar o engajamento e a produtividade da equipe.', image: 'https://i.postimg.cc/J4j8qpmJ/missing-puzzle-piece.jpg', content: "<p>A cultura organizacional é o conjunto de valores, crenças e comportamentos que moldam o ambiente de uma empresa. Uma cultura forte e positiva atrai e retém talentos, melhora a colaboração e aumenta a satisfação dos funcionários. Empresas que investem em sua cultura criam um senso de pertencimento e propósito, o que se traduz em maior produtividade e inovação. Avalie se os valores da empresa estão alinhados com os seus antes de aceitar uma proposta.</p>" },
+  { id: 3, title: 'Liderança Estratégica', summary: 'As competências essenciais para líderes que desejam guiar suas equipes ao sucesso.', image: 'https://i.postimg.cc/gJwF6DNx/origami-boats-leadship-concept-3d-rendering.jpg', content: "<p>Um líder estratégico vai além da gestão diária. Ele possui uma visão clara do futuro, inspira sua equipe e toma decisões alinhadas aos objetivos de longo prazo da organização. As principais competências incluem comunicação eficaz, inteligência emocional, capacidade de delegar e, acima de tudo, a habilidade de motivar e desenvolver outras pessoas. Investir no desenvolvimento da liderança é crucial para a sustentabilidade de qualquer negócio.</p>" },
+  { id: 4, title: 'Avaliação de Desempenho', summary: 'Como transformar a avaliação de desempenho em uma ferramenta de crescimento contínuo.', image: 'https://i.postimg.cc/NjGnHD0Q/review-increase-rating-ranking-evaluation-classification-concept-businessman-draw-five-yellow-star-i.jpg', content: "<p>A avaliação de desempenho não deve ser vista como um evento anual de julgamento, mas sim como um processo contínuo de feedback e desenvolvimento. Um sistema eficaz foca em metas claras (OKRs ou KPIs), oferece feedbacks construtivos e regulares, e identifica oportunidades de treinamento e crescimento. Quando bem executada, a avaliação fortalece a relação entre líder e liderado e alinha as expectativas para o sucesso individual e coletivo.</p>" },
+  { id: 5, title: 'Motivação no Trabalho', summary: 'Estratégias para manter a si mesmo e sua equipe engajados e motivados.', image: 'https://i.postimg.cc/1znJGj11/business-people-motivating-themselves.jpg', content: "<p>A motivação é o combustível da produtividade. Ela vem de fatores intrísecos (propósito, autonomia, maestria) e extrínsecos (reconhecimento, remuneração). Para manter a equipe motivada, é fundamental reconhecer o bom trabalho, oferecer oportunidades de desenvolvimento, promover um ambiente de trabalho positivo e garantir que todos entendam como sua função contribui para os objetivos maiores da empresa. Pequenos gestos de apreço podem ter um grande impacto.</p>" },
+  { id: 6, title: 'Gestão de Carreira', summary: 'Assuma o controle do seu futuro profissional com um plano de carreira bem estruturado.', image: 'https://i.postimg.cc/d1FrhHqB/boss-going-upstairs.jpg', content: "<p>Gerir sua carreira significa ser o protagonista do seu desenvolvimento profissional. Comece com autoconhecimento: quais são seus interesses, habilidades e valores? Defina metas de curto, médio e longo prazo. Busque constantemente aprender novas competências (upskilling e reskilling). Construa um networking sólido e procure mentores. Não espere que a empresa dite seu caminho; seja proativo e crie suas próprias oportunidades de crescimento.</p>" },
+];
 
-        /* Tipografia Base */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            overflow-x: hidden;
-        }
 
-        h1, h2, h3 {
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        /* Animação de Gradiente para Fundos */
-        .animated-gradient {
-            background: linear-gradient(135deg, var(--bg-dark), var(--brand-dark-blue), #0F172A);
-            background-size: 200% 200%;
-            animation: animateGradient 15s ease infinite;
-        }
+// --- COMPONENTES ---
 
-        @keyframes animateGradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+const Header = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navLinks = ['Home', 'Quem Somos', 'Serviços', 'Vagas', 'Canais', 'Blog', 'Contato'];
 
-        /* Header com efeito de scroll */
-        header.scrolled {
-            background-color: rgba(15, 23, 42, 0.85); /* --bg-dark com transparência */
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #334155; /* Slate 700 */
-        }
-        
-        /* Animação de entrada para seções */
-        .reveal {
-            opacity: 0;
-            transform: translateY(50px) scale(0.98);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  const scrollToSection = (id) => {
+    const formattedId = id.toLowerCase().replace(' ', '-');
+    document.getElementById(formattedId)?.scrollIntoView({ behavior: 'smooth' });
+    setIsMenuOpen(false);
+  };
 
-        /* Animação de Pulso para Botão CTA */
-        .pulse-glow {
-            animation: pulseGlow 3s infinite;
-        }
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 10px 0px rgba(90, 139, 219, 0.5); }
-            50% { box-shadow: 0 0 25px 8px rgba(90, 139, 219, 0.3); }
-        }
-
-        /* Estilização e Animação de Cards */
-        .service-card {
-            background-color: #1E293B; /* Slate 800 */
-            border: 1px solid #334155; /* Slate 700 */
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .service-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--brand-accent);
-            box-shadow: 0 10px 30px -10px rgba(90, 139, 219, 0.2);
-        }
-
-        /* Estilo para seções claras */
-        .section-light {
-            background-color: var(--bg-light);
-            color: var(--text-dark-secondary);
-        }
-        .section-light h2, .section-light h3 {
-            color: var(--text-dark);
-        }
-
-        /* Modal do Blog */
-        #blog-modal.open { display: flex; }
-    </style>
-</head>
-
-<body>
-    <!-- ===== Cabeçalho Fixo ===== -->
-    <header id="header" class="fixed top-0 left-0 w-full z-50 transition-all duration-300">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <a href="#home"><img class="h-5" src="https://i.postimg.cc/h4Vf5H4z/logosucesso.png" alt="Logo Sucesso RH"></a>
-                <nav class="hidden lg:flex items-center space-x-8 text-white">
-                    <a href="#home" class="hover:text-[--brand-accent] transition-colors">Home</a>
-                    <a href="#quem-somos" class="hover:text-[--brand-accent] transition-colors">Quem Somos</a>
-                    <a href="#servicos" class="hover:text-[--brand-accent] transition-colors">Serviços</a>
-                    <a href="#vagas" class="hover:text-[--brand-accent] transition-colors">Vagas</a>
-                    <a href="#canais" class="hover:text-[--brand-accent] transition-colors">Canais</a>
-                    <a href="#blog" class="hover:text-[--brand-accent] transition-colors">Blog</a>
-                    <a href="#contato" class="hover:text-[--brand-accent] transition-colors">Contato</a>
-                </nav>
-                <a href="https://sucessorh.github.io/recrutamentoeselecao/" target="_blank" class="hidden lg:block bg-[--brand-light-blue] text-white font-bold py-2 px-5 rounded-full hover:bg-[--brand-accent] transition-all duration-300 transform hover:scale-105">
-                    Candidatar-se às Vagas
+  return (
+    <>
+      <motion.header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-[#1C4D96]/80 backdrop-blur-lg shadow-lg' : 'bg-[#1C4D96]'}`}
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="container mx-auto px-6 py-4 flex justify-between items-center h-20">
+          <a href="#home" onClick={(e) => {e.preventDefault(); scrollToSection('home')}}>
+            <img src="https://i.postimg.cc/h4Vf5H4z/logosucesso.png" alt="Logo Sucesso RH" className="h-5" />
+          </a>
+          <nav className="hidden lg:flex items-center space-x-8">
+            {navLinks.map(link => (
+              <button key={link} onClick={() => scrollToSection(link)} className="text-white hover:text-blue-200 transition-colors relative group">
+                {link}
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></span>
+              </button>
+            ))}
+          </nav>
+           <a href="https://sucessorh.github.io/recrutamentoeselecao/" target="_blank" rel="noopener noreferrer" className="hidden lg:block bg-white text-[#1C4D96] font-bold py-2 px-6 rounded-full hover:bg-blue-100 transition-all duration-300 transform hover:scale-105">
+              Candidatar-se às Vagas
+           </a>
+          <div className="lg:hidden flex items-center">
+             <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="ml-4 text-white">
+                <Menu size={28}/>
+             </button>
+          </div>
+        </div>
+      </motion.header>
+      
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: "-50%" }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: "-50%" }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="lg:hidden fixed top-0 left-0 w-full h-screen bg-[#1C4D96]/95 backdrop-blur-xl z-40 pt-20"
+          >
+             <nav className="flex flex-col items-center justify-center h-full space-y-8">
+                {navLinks.map(link => (
+                    <button key={link} onClick={() => scrollToSection(link)} className="text-white text-3xl font-semibold hover:text-blue-200 transition-colors">
+                        {link}
+                    </button>
+                ))}
+                 <a href="https://sucessorh.github.io/recrutamentoeselecao/" target="_blank" rel="noopener noreferrer" className="mt-4 bg-white text-[#1C4D96] font-bold py-3 px-8 rounded-full hover:bg-blue-100 transition-all duration-300">
+                    Candidatar-se
                 </a>
-                <div class="lg:hidden">
-                    <button id="menu-btn" class="text-white focus:outline-none"><i data-lucide="menu" class="w-7 h-7"></i></button>
-                </div>
-            </div>
-        </div>
-        <div id="mobile-menu" class="hidden lg:hidden bg-[--bg-dark]/95 backdrop-blur-sm absolute top-20 left-0 w-full">
-            <div class="flex flex-col items-center space-y-6 py-8 text-white">
-                <a href="#home" class="mobile-link text-lg">Home</a>
-                <a href="#quem-somos" class="mobile-link text-lg">Quem Somos</a>
-                <a href="#servicos" class="mobile-link text-lg">Serviços</a>
-                <a href="#vagas" class="mobile-link text-lg">Vagas</a>
-                <a href="#canais" class="mobile-link text-lg">Canais</a>
-                <a href="#blog" class="mobile-link text-lg">Blog</a>
-                <a href="#contato" class="mobile-link text-lg">Contato</a>
-                <a href="https://sucessorh.github.io/recrutamentoeselecao/" target="_blank" class="mt-4 bg-[--brand-light-blue] text-white font-bold py-3 px-8 rounded-full">Candidatar-se</a>
-            </div>
-        </div>
-    </header>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
 
-    <main>
-        <!-- ===== Seção Hero ===== -->
-        <section id="home" class="relative min-h-screen flex items-center justify-center text-center overflow-hidden pt-20 animated-gradient">
-            <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-                <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-4 leading-tight text-text-headings-light reveal">
-                    Conectando Empresas e Talentos para o <span class="text-[--brand-accent]">Sucesso</span>
-                </h1>
-                <p class="text-lg sm:text-xl max-w-3xl mx-auto mb-10 text-slate-300 reveal" style="transition-delay: 0.2s;">
-                    Compromisso, qualidade e parceria. Os pilares para um serviço especializado e resultados excepcionais em RH.
-                </p>
-                <a href="https://sucessorh.github.io/recrutamentoeselecao/" target="_blank" class="inline-block bg-[--brand-light-blue] text-white font-bold text-lg py-4 px-10 rounded-full border-2 border-[--brand-light-blue] hover:bg-transparent hover:border-[--brand-accent] hover:text-[--brand-accent] transition-all duration-300 transform hover:scale-105 reveal pulse-glow" style="transition-delay: 0.4s;">
-                    Acessar Central de Vagas
-                </a>
-            </div>
-        </section>
-
-        <!-- ===== Seção "Quem Somos" ===== -->
-        <section id="quem-somos" class="py-20 lg:py-28 section-light reveal">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                    <div class="rounded-lg overflow-hidden shadow-2xl"><img src="https://i.postimg.cc/ry3ygd46/sucessorhverso.jpg" alt="Fachada da empresa Sucesso RH" class="w-full h-full object-cover"></div>
-                    <div>
-                        <h2 class="text-3xl md:text-4xl font-bold mb-6 text-[--brand-dark-blue]">Quem Somos?</h2>
-                        <p class="mb-8 text-lg">Com 18 anos de excelência no mercado, somos pioneiros em soluções de RH, comprometidos com a qualidade e a satisfação do cliente. A parceria é o nosso alicerce para um serviço especializado e resultados excepcionais.</p>
-                        <div class="space-y-6">
-                            <div class="flex items-start"><div class="flex-shrink-0 bg-[--brand-dark-blue]/10 text-[--brand-dark-blue] p-3 rounded-full mr-4"><i data-lucide="rocket" class="w-6 h-6"></i></div><div><h3 class="text-xl font-bold">Missão</h3><p class="mt-1">Conectar clientes com profissionais qualificados, prestando o melhor serviço com alta qualidade, transparência e obtendo reconhecimento.</p></div></div>
-                            <div class="flex items-start"><div class="flex-shrink-0 bg-[--brand-dark-blue]/10 text-[--brand-dark-blue] p-3 rounded-full mr-4"><i data-lucide="eye" class="w-6 h-6"></i></div><div><h3 class="text-xl font-bold">Visão</h3><p class="mt-1">Estabelecer parcerias estratégicas, gerando o crescimento mútuo de nossos clientes e colaboradores.</p></div></div>
-                            <div class="flex items-start"><div class="flex-shrink-0 bg-[--brand-dark-blue]/10 text-[--brand-dark-blue] p-3 rounded-full mr-4"><i data-lucide="gem" class="w-6 h-6"></i></div><div><h3 class="text-xl font-bold">Valores</h3><p class="mt-1">Trabalho, conexão interpessoal, respeito e credibilidade para a construção de uma marca sólida.</p></div></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== Seção "Serviços" ===== -->
-        <section id="servicos" class="py-20 lg:py-28 bg-[--bg-dark] reveal">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-text-headings-light">Nossos Serviços</h2>
-                    <p class="mt-4 text-lg text-slate-300 max-w-2xl mx-auto">Oferecemos uma assessoria abrangente em gestão de talentos, do recrutamento à rescisão.</p>
-                </div>
-                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <div class="service-card p-8 rounded-xl text-center">
-                        <div class="inline-block bg-[--brand-accent]/10 text-[--brand-accent] p-4 rounded-full mb-6"><i data-lucide="users-2" class="w-8 h-8"></i></div>
-                        <h3 class="text-xl font-bold mb-2 text-text-headings-light">Seleção de Pessoal</h3><p>Recrutamos e selecionamos o profissional de acordo com o perfil traçado pela sua empresa.</p>
-                    </div>
-                    <div class="service-card p-8 rounded-xl text-center">
-                        <div class="inline-block bg-[--brand-accent]/10 text-[--brand-accent] p-4 rounded-full mb-6"><i data-lucide="briefcase" class="w-8 h-8"></i></div>
-                        <h3 class="text-xl font-bold mb-2 text-text-headings-light">Mão de Obra Temporária</h3><p>Contratação por tempo determinado para suprir necessidades transitórias de pessoal.</p>
-                    </div>
-                    <div class="service-card p-8 rounded-xl text-center">
-                        <div class="inline-block bg-[--brand-accent]/10 text-[--brand-accent] p-4 rounded-full mb-6"><i data-lucide="building-2" class="w-8 h-8"></i></div>
-                        <h3 class="text-xl font-bold mb-2 text-text-headings-light">Terceirização (CLT)</h3><p>Gerenciamento de atividades de apoio e atividade-fim com profissionais qualificados.</p>
-                    </div>
-                    <div class="service-card p-8 rounded-xl text-center">
-                        <div class="inline-block bg-[--brand-accent]/10 text-[--brand-accent] p-4 rounded-full mb-6"><i data-lucide="sparkles" class="w-8 h-8"></i></div>
-                        <h3 class="text-xl font-bold mb-2 text-text-headings-light">Treinamento</h3><p>Capacitamos e desenvolvemos equipes para o crescimento pessoal e profissional.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== Seção de Vagas ===== -->
-        <section id="vagas" class="py-20 lg:py-28 section-light text-center reveal">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-4xl sm:text-5xl font-extrabold mb-4 text-[--brand-dark-blue]">Sua Carreira Decola Aqui.</h2>
-                <p class="text-lg sm:text-xl max-w-3xl mx-auto mb-10">Conectamos você às melhores oportunidades do mercado. Dê o próximo passo na sua jornada profissional conosco.</p>
-                <a href="https://sucessorh.github.io/recrutamentoeselecao/" target="_blank" class="inline-block bg-[--brand-dark-blue] text-white font-bold text-lg py-4 px-8 rounded-full border-2 border-[--brand-dark-blue] hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105 whitespace-nowrap">Ver Vagas e Candidatar-se Agora</a>
-            </div>
-        </section>
-
-        <!-- ===== Seção de Canais ===== -->
-        <section id="canais" class="py-20 lg:py-28 bg-[--bg-dark] reveal">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-text-headings-light">Canais de Comunicação</h2>
-                    <p class="mt-4 text-lg text-slate-300 max-w-2xl mx-auto">Sua voz é importante. Utilize nossos canais para nos ajudar a melhorar sempre.</p>
-                </div>
-                <div class="grid md:grid-cols-2 gap-10 max-w-4xl mx-auto">
-                    <div class="service-card p-8 rounded-xl">
-                        <div class="flex items-center mb-4"><div class="text-[--brand-accent] mr-4"><i data-lucide="message-square" class="w-8 h-8"></i></div><h3 class="text-2xl font-bold text-text-headings-light">Ouvidoria</h3></div>
-                        <p class="mb-6">Um espaço seguro e confidencial para suas sugestões, elogios ou críticas.</p>
-                        <a href="https://sucessorh.github.io/ouvidoriasucessorh/" target="_blank" class="font-semibold text-[--brand-accent] hover:underline">Acessar Ouvidoria <i data-lucide="arrow-right" class="inline w-4 h-4"></i></a>
-                    </div>
-                    <div class="service-card p-8 rounded-xl">
-                        <div class="flex items-center mb-4"><div class="text-[--brand-accent] mr-4"><i data-lucide="clipboard-check" class="w-8 h-8"></i></div><h3 class="text-2xl font-bold text-text-headings-light">Pesquisa de Satisfação</h3></div>
-                        <p class="mb-6">Participe e compartilhe sua experiência conosco. Sua opinião constrói uma Sucesso RH melhor.</p>
-                        <a href="https://sucessorh.github.io/pesquisainternasucessor/" target="_blank" class="font-semibold text-[--brand-accent] hover:underline">Participar da Pesquisa <i data-lucide="arrow-right" class="inline w-4 h-4"></i></a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== Seção do Blog ===== -->
-        <section id="blog" class="py-20 lg:py-28 section-light reveal">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold">Nosso Blog</h2>
-                    <p class="mt-4 text-lg max-w-2xl mx-auto">Conteúdos e insights sobre carreira, liderança e as últimas tendências do universo de RH.</p>
-                </div>
-                <div id="blog-posts-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-            </div>
-        </section>
-
-        <!-- ===== Seção de Contato ===== -->
-        <section id="contato" class="py-20 lg:py-28 bg-[--bg-dark] reveal">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-text-headings-light">Entre em Contato</h2>
-                    <p class="mt-4 text-lg text-slate-300 max-w-2xl mx-auto">Fale conosco para saber mais sobre nossas soluções ou para iniciar uma parceria de sucesso.</p>
-                </div>
-                <div class="grid lg:grid-cols-2 gap-12">
-                    <div class="bg-slate-800/50 p-8 rounded-xl border border-slate-700">
-                        <form action="#" method="POST" class="space-y-6">
-                            <div><label for="name" class="block text-sm font-medium">Nome</label><input type="text" id="name" class="mt-1 block w-full px-4 py-3 rounded-md bg-slate-800 border-slate-600 text-white focus:border-[--brand-accent] focus:ring focus:ring-[--brand-accent] focus:ring-opacity-50"></div>
-                            <div><label for="email" class="block text-sm font-medium">E-mail</label><input type="email" id="email" class="mt-1 block w-full px-4 py-3 rounded-md bg-slate-800 border-slate-600 text-white focus:border-[--brand-accent] focus:ring focus:ring-[--brand-accent] focus:ring-opacity-50"></div>
-                            <div><label for="message" class="block text-sm font-medium">Mensagem</label><textarea id="message" rows="4" class="mt-1 block w-full px-4 py-3 rounded-md bg-slate-800 border-slate-600 text-white focus:border-[--brand-accent] focus:ring focus:ring-[--brand-accent] focus:ring-opacity-50"></textarea></div>
-                            <div><button type="submit" class="w-full justify-center py-3 px-4 rounded-md font-bold text-white bg-[--brand-light-blue] hover:bg-[--brand-accent] transition-colors">Enviar Mensagem</button></div>
-                        </form>
-                    </div>
-                    <div>
-                        <div class="space-y-6 mb-8">
-                            <div class="flex items-start"><i data-lucide="mail" class="w-6 h-6 text-[--brand-accent] mt-1 mr-4"></i><div><h3 class="font-semibold text-white">E-mail</h3><a href="mailto:contato@sucessorh.com.br" class="hover:text-[--brand-accent]">contato@sucessorh.com.br</a></div></div>
-                            <div class="flex items-start"><i data-lucide="phone" class="w-6 h-6 text-[--brand-accent] mt-1 mr-4"></i><div><h3 class="font-semibold text-white">Telefone</h3><a href="tel:+5592993242663" class="hover:text-[--brand-accent]">(92) 99324-2663</a></div></div>
-                            <div class="flex items-start"><i data-lucide="map-pin" class="w-6 h-6 text-[--brand-accent] mt-1 mr-4"></i><div><h3 class="font-semibold text-white">Endereço</h3><p>Av. Tefé, 4265 - Distrito Industrial I<br>Manaus - AM</p></div></div>
-                        </div>
-                        <div class="w-full h-80 rounded-lg overflow-hidden"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3983.856973797472!2d-59.97235232498459!3d-3.132899496839332!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x926c19f5a773223d%3A0xe54c6e2b12a2333e!2sAv.%20Tef%C3%A9%2C%204265%20-%20Japiim%2C%20Manaus%20-%20AM%2C%2069078-000!5e0!3m2!1spt-BR!2sbr!4v1694709841838!5m2!1spt-BR!2sbr" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="grayscale hover:grayscale-0 transition-all duration-300"></iframe></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-[--bg-dark] border-t border-slate-800">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div><a href="#home"><img class="h-6 mb-4" src="https://i.postimg.cc/h4Vf5H4z/logosucesso.png" alt="Logo Sucesso RH"></a><p class="text-sm">Conectando talentos ao sucesso do seu negócio.</p></div>
-                <div><h4 class="font-bold text-lg mb-4 text-white">Links Rápidos</h4><ul class="space-y-2"><li><a href="#quem-somos" class="hover:text-white transition">Quem Somos</a></li><li><a href="#servicos" class="hover:text-white transition">Serviços</a></li><li><a href="#vagas" class="hover:text-white transition">Vagas</a></li><li><a href="#contato" class="hover:text-white transition">Contato</a></li></ul></div>
-                <div><h4 class="font-bold text-lg mb-4 text-white">Soluções</h4><ul class="space-y-2"><li>Recrutamento</li><li>Consultoria</li><li>Desenvolvimento</li><li>Gestão de Pessoas</li></ul></div>
-                <div><h4 class="font-bold text-lg mb-4 text-white">Siga-nos</h4><div class="flex space-x-4"><a href="#" class="hover:text-white"><i data-lucide="linkedin"></i></a><a href="#" class="hover:text-white"><i data-lucide="instagram"></i></a><a href="#" class="hover:text-white"><i data-lucide="facebook"></i></a></div></div>
-            </div>
-            <div class="mt-12 border-t border-slate-800 pt-8 text-center text-sm text-slate-500"><p>&copy; 2024 Sucesso RH. Todos os direitos reservados.</p></div>
-        </div>
-    </footer>
-
-    <!-- ===== Modal do Blog ===== -->
-    <div id="blog-modal" class="fixed inset-0 bg-black/80 z-[100] hidden items-center justify-center p-4">
-        <div id="modal-container" class="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative transform transition-all duration-300 scale-95 opacity-0">
-            <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800"><i data-lucide="x" class="w-8 h-8"></i></button>
-            <img id="modal-image" src="" alt="Imagem do Post" class="w-full h-64 object-cover rounded-t-lg">
-            <div class="p-8"><h2 id="modal-title" class="text-3xl font-bold text-[--text-dark] mb-4"></h2><div id="modal-body" class="prose max-w-none text-[--text-dark-secondary]"></div></div>
-        </div>
+const Hero = () => (
+  <section id="home" className="relative h-screen flex items-center justify-center text-center overflow-hidden bg-cover bg-center" style={{backgroundImage: "url('https://i.postimg.cc/sxjqFyDw/successful-happy-business-team.jpg')"}}>
+    <div className="absolute inset-0 bg-[#1C4D96] opacity-60"></div>
+    <div className="relative z-10 px-6 text-white">
+      <motion.h1 
+        className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight drop-shadow-lg"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        Conectando Empresas e Talentos para o Sucesso
+      </motion.h1>
+      <motion.p 
+        className="text-lg md:text-xl max-w-3xl mx-auto mb-10 drop-shadow-md"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+      >
+        Soluções estratégicas para o crescimento e inovação em Recursos Humanos.
+      </motion.p>
+      <motion.a 
+        href="https://sucessorh.github.io/recrutamentoeselecao/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-block bg-white text-[#1C4D96] font-bold text-lg py-4 px-10 rounded-full border-2 border-transparent hover:bg-transparent hover:text-white hover:border-white transition-all duration-300 transform hover:scale-105"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, delay: 0.6, type: 'spring' }}
+        whileHover={{
+            boxShadow: "0 0 0 10px rgba(255, 255, 255, 0)",
+        }}
+        whileTap={{ scale: 0.95 }}
+      >
+        Acessar Central de Vagas
+      </motion.a>
     </div>
+  </section>
+);
 
-    <!-- ===== JavaScript ===== -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            const header = document.getElementById('header');
-            const menuBtn = document.getElementById('menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const mobileLinks = document.querySelectorAll('.mobile-link');
-            window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 50));
-            menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-            mobileLinks.forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
 
-            const revealElements = document.querySelectorAll('.reveal');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1 });
-            revealElements.forEach(el => observer.observe(el));
-            
-            const blogPostsContainer = document.getElementById('blog-posts-container');
-            const modal = document.getElementById('blog-modal');
-            const modalContainer = document.getElementById('modal-container');
-            const modalCloseBtn = document.getElementById('modal-close-btn');
-            const modalImage = document.getElementById('modal-image');
-            const modalTitle = document.getElementById('modal-title');
-            const modalBody = document.getElementById('modal-body');
+const QuemSomos = () => {
+    const cardVariants = {
+        hidden: { opacity: 0, y: 50 },
+        visible: i => ({
+          opacity: 1,
+          y: 0,
+          transition: {
+            delay: i * 0.2,
+            duration: 0.5
+          }
+        })
+      };
+    
+      const aboutCards = [
+        { icon: <Gem size={24} />, title: "Missão", content: "Conectar talentos a oportunidades que promovam crescimento mútuo, oferecendo soluções de RH que geram valor para empresas e profissionais." },
+        { icon: <Eye size={24} />, title: "Visão", content: "Ser referência em consultoria de Recursos Humanos, reconhecida pela excelência, inovação e pelo impacto positivo na carreira das pessoas e no sucesso dos negócios." },
+        { icon: <HeartHandshake size={24} />, title: "Valores", content: "Ética, Comprometimento, Inovação, Respeito e Valorização das Pessoas." }
+      ];
 
-            const postsData = [
-                {id: 1, image: 'https://i.postimg.cc/G2RhF6T4/job-interview-candidate-selection-employment.jpg', title: '5 Dicas para sua Próxima Entrevista', summary: 'Prepare-se para se destacar com dicas práticas que vão desde a pesquisa sobre a empresa até a linguagem corporal.', content: `<p>Conquistar o emprego dos sonhos exige preparação. Uma entrevista bem-sucedida é a porta de entrada. Aqui estão 5 dicas essenciais:</p><ol><li><strong>Pesquise a Empresa:</strong> Conheça a cultura, missão e valores.</li><li><strong>Conheça seu Currículo:</strong> Esteja pronto para detalhar cada experiência.</li><li><strong>Prepare suas Respostas:</strong> Pense em exemplos práticos para perguntas comportamentais.</li><li><strong>Cuide da Aparência:</strong> Vista-se de forma profissional.</li><li><strong>Faça Perguntas Inteligentes:</strong> Prepare perguntas sobre a equipe e os desafios da vaga.</li></ol><p>Lembre-se, a confiança é sua maior aliada. Boa sorte!</p>`},
-                {id: 2, image: 'https://i.postimg.cc/J4j8qpmJ/missing-puzzle-piece.jpg', title: 'A Importância da Cultura Organizacional', summary: 'Entenda como uma cultura forte impacta no engajamento dos colaboradores e nos resultados do negócio.', content: `<p>A cultura organizacional é o conjunto de valores, crenças e práticas que moldam o comportamento dentro de uma empresa. Uma cultura forte e positiva traz inúmeros benefícios, como atração de talentos, aumento do engajamento e fortalecimento da marca empregadora.</p>`},
-                {id: 3, image: 'https://i.postimg.cc/gJwF6DNx/origami-boats-leadship-concept-3d-rendering.jpg', title: 'Liderança 4.0: Habilidades do Futuro', summary: 'O mercado mudou, e a liderança também. Descubra as competências que todo líder precisa desenvolver.', content: `<p>A liderança 4.0 é baseada na colaboração, empatia e adaptabilidade. As habilidades essenciais incluem inteligência emocional, comunicação eficaz, pensamento crítico e flexibilidade.</p>`},
-                {id: 4, image: 'https://i.postimg.cc/NjGnHD0Q/review-increase-rating-ranking-evaluation-classification-concept-businessman-draw-five-yellow-star-i.jpg', title: 'Feedback que Transforma', summary: 'Aprenda a transformar o feedback em uma poderosa ferramenta de desenvolvimento para você e sua equipe.', content: `<p>O feedback é essencial para o crescimento. Para um feedback construtivo, seja específico, foque no comportamento, equilibre pontos positivos e de melhoria, e ofereça sugestões. Pratique a escuta ativa ao receber.</p>`},
-                {id: 5, image: 'https://i.postimg.cc/1znJGj11/business-people-motivating-themselves.jpg', title: 'Onboarding de Sucesso: Como Integrar', summary: 'Os primeiros 90 dias são cruciais. Um processo bem estruturado garante o engajamento e a produtividade.', content: `<p>Um onboarding eficaz vai muito além de entregar um computador. Envolve um plano de integração, programa de mentoria e check-ins regulares para garantir que o novo colaborador se sinta bem-vindo e produtivo desde o início.</p>`},
-                {id: 6, image: 'https://i.postimg.cc/d1FrhHqB/boss-going-upstairs.jpg', title: 'Desenvolvimento de Carreira: Protagonismo', summary: 'Não espere pela empresa. Assuma o controle da sua jornada profissional e construa um plano de carreira sólido.', content: `<p>O desenvolvimento de carreira é sua responsabilidade. Invista em autoconhecimento, defina objetivos claros, crie um plano de ação, construa seu networking e busque feedback constante. Sua carreira é sua maior empresa.</p>`},
-            ];
+  return(
+    <section id="quem-somos" className="py-24 bg-gray-900 text-white overflow-hidden">
+      <div className="container mx-auto px-6">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="relative rounded-2xl overflow-hidden"
+            >
+                 <img src="https://i.postimg.cc/MGrNCgjS/authentic-small-youthful-marketing-agency.jpg" alt="Equipe Sucesso RH" className="w-full h-auto object-cover rounded-lg shadow-2xl" />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Sobre a <span className="text-blue-400">Sucesso RH</span></h2>
+                <p className="text-gray-300 text-lg leading-relaxed mb-8">Somos uma consultoria de RH dedicada a impulsionar o potencial humano e organizacional. Acreditamos que o sucesso de uma empresa está diretamente ligado ao talento e à satisfação de seus colaboradores.</p>
+                <div className="space-y-6">
+                    {aboutCards.map((card, i) => (
+                        <motion.div
+                        key={card.title}
+                        className="p-6 border border-white/10 rounded-xl bg-gray-500/10 backdrop-blur-lg flex items-start space-x-4"
+                        custom={i}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.5 }}
+                        variants={cardVariants}
+                        >
+                            <div className="flex-shrink-0 text-blue-400">{card.icon}</div>
+                            <div>
+                               <h3 className="text-xl font-bold text-white mb-2">{card.title}</h3>
+                               <p className="text-gray-400">{card.content}</p>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+            </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
-            blogPostsContainer.innerHTML = postsData.map(post => `
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-all duration-300 flex flex-col group border hover:shadow-2xl">
-                    <div class="overflow-hidden"><img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"></div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-xl font-bold mb-2 text-[--text-dark]">${post.title}</h3>
-                        <p class="mb-4 flex-grow text-[--text-dark-secondary]">${post.summary}</p>
-                        <button data-id="${post.id}" class="read-more-btn mt-auto font-semibold text-[--brand-dark-blue] hover:underline self-start">Ler mais <i data-lucide="arrow-right" class="inline w-4 h-4"></i></button>
+const Servicos = () => {
+    return (
+      <section 
+        id="servicos" 
+        className="py-24 bg-white relative"
+        style={{
+            backgroundImage: "url('https://i.postimg.cc/kG5V26g8/sucessorhmockupempresa.png')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-white/95 backdrop-blur-sm"></div>
+        <div className="container mx-auto px-6 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800">Nossos <span className="text-[#1C4D96]">Serviços</span></h2>
+            <p className="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">Oferecemos um portfólio completo de soluções para a gestão de pessoas e o desenvolvimento do seu negócio.</p>
+          </motion.div>
+  
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {servicosData.map((servico, i) => (
+              <motion.div
+                key={servico.id}
+                className="relative rounded-2xl group cursor-pointer p-8 bg-white/80 backdrop-blur-md shadow-lg border border-gray-100 flex flex-col items-center text-center"
+                style={{ transformStyle: 'preserve-3d' }}
+                whileHover={{ y: -10, scale: 1.03, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: i * 0.1}}
+              >
+                  <div className="text-[#1C4D96] mb-4">{servico.icon}</div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">{servico.title}</h3>
+                  <p className="text-gray-600 flex-grow">{servico.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+const ConhecimentoCapsulas = () => {
+    const duplicatedCapsulas = [...capsulasData, ...capsulasData];
+
+    return (
+        <section className="py-24 bg-gray-900 overflow-hidden">
+            <div className="container mx-auto px-6">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.5 }}
+                    transition={{ duration: 0.6 }}
+                    className="text-center mb-12"
+                >
+                    <h2 className="text-4xl md:text-5xl font-bold text-white">Cápsulas de <span className="text-blue-400">Conhecimento</span></h2>
+                    <p className="text-lg text-gray-400 mt-4 max-w-2xl mx-auto">Dicas rápidas para impulsionar sua carreira e conquistar a vaga desejada.</p>
+                </motion.div>
+            </div>
+            <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">
+                <ul className="flex items-center justify-center md:justify-start [&_li]:mx-4 [&_img]:max-w-none animate-infinite-scroll">
+                    {duplicatedCapsulas.map((item, index) => (
+                        <li key={index} className="flex-shrink-0 bg-gray-800/50 backdrop-blur-md rounded-xl p-6 w-80 border border-white/10">
+                            <div className="flex items-center space-x-4">
+                                <span className="text-blue-400">{item.icon}</span>
+                                <p className="text-white font-medium">{item.text}</p>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </section>
+    );
+};
+
+const CoracaoRH = () => (
+    <section 
+        className="py-24 text-white bg-cover bg-center relative" 
+        style={{backgroundImage: "url('https://i.postimg.cc/NGrV9NZN/close-up-smiling-person-conference-room.jpg')"}}
+    >
+        <div className="absolute inset-0 bg-[#1C4D96] opacity-80"></div>
+        <div className="container mx-auto px-6 relative z-10 text-center">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.8 }}
+            >
+                <HeartHandshake size={48} className="mx-auto mb-6 text-white"/>
+                <h2 className="text-4xl md:text-5xl font-extrabold mb-6 drop-shadow-lg">Descubra o Coração do RH</h2>
+                <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+                    Nossa equipe de Recursos Humanos é movida pela paixão de identificar talentos e pelo compromisso de contribuir para trajetórias profissionais de sucesso. Celebramos cada oportunidade de transformar positivamente a vida de um candidato ao dar as boas-vindas a um novo membro na nossa família corporativa.
+                </p>
+            </motion.div>
+        </div>
+    </section>
+);
+  
+const Vagas = () => (
+    <section id="vagas" className="py-24 text-white bg-cover bg-center bg-fixed relative" style={{backgroundImage: "url('https://i.postimg.cc/8cy64d0t/happy-businesswoman-wearing-suit-shaking-male-hand-focus-handshake.jpg')"}}>
+        <div className="absolute inset-0 bg-[#1C4D96] opacity-70"></div>
+        <div className="container mx-auto px-6 relative z-10 text-center">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.6 }}
+            >
+                <h2 className="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">Sua Carreira Decola Aqui.</h2>
+                <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8 drop-shadow-md">Explore as oportunidades que temos para você e dê o próximo passo na sua jornada profissional. A vaga dos seus sonhos pode estar a um clique de distância.</p>
+                <a href="https://sucessorh.github.io/recrutamentoeselecao/" target="_blank" rel="noopener noreferrer" className="inline-block bg-white text-[#1C4D96] whitespace-nowrap font-bold text-lg py-4 px-10 rounded-full border-2 border-transparent hover:bg-transparent hover:text-white hover:border-white transition-all duration-300 transform hover:scale-105">
+                    Ver Vagas e Candidatar-se Agora
+                </a>
+            </motion.div>
+        </div>
+    </section>
+);
+  
+const Canais = () => (
+    <section id="canais" className="py-24 bg-gray-900">
+        <div className="container mx-auto px-6">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.6 }}
+                className="text-center mb-16"
+            >
+                <h2 className="text-4xl md:text-5xl font-bold text-white">Nossos <span className="text-blue-400">Canais</span></h2>
+                <p className="text-lg text-gray-400 mt-4 max-w-2xl mx-auto">Sua opinião é fundamental. Utilize nossos canais para nos ajudar a melhorar sempre.</p>
+            </motion.div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <motion.a href="https://sucessorh.github.io/ouvidoriasucessorh/" target="_blank" rel="noopener noreferrer"
+                    className="block p-8 bg-gray-800/50 backdrop-blur-md rounded-2xl border border-white/10 hover:border-blue-400 transition-colors"
+                    whileHover={{ y: -5 }}
+                >
+                    <div className="flex items-center space-x-5">
+                        <Megaphone size={32} className="text-blue-400"/>
+                        <div>
+                            <h3 className="text-2xl font-bold text-white">Ouvidoria</h3>
+                            <p className="text-gray-400 mt-1">Canal direto para sugestões, elogios e críticas.</p>
+                        </div>
                     </div>
-                </div>`).join('');
-            lucide.createIcons();
+                </motion.a>
+                <motion.a href="https://sucessorh.github.io/pesquisainternasucessor/" target="_blank" rel="noopener noreferrer"
+                    className="block p-8 bg-gray-800/50 backdrop-blur-md rounded-2xl border border-white/10 hover:border-blue-400 transition-colors"
+                    whileHover={{ y: -5 }}
+                >
+                    <div className="flex items-center space-x-5">
+                        <Smile size={32} className="text-blue-400"/>
+                        <div>
+                            <h3 className="text-2xl font-bold text-white">Pesquisa de Satisfação</h3>
+                            <p className="text-gray-400 mt-1">Conte-nos sobre sua experiência com nossos serviços.</p>
+                        </div>
+                    </div>
+                </motion.a>
+            </div>
+        </div>
+    </section>
+);
 
-            const openModal = (post) => {
-                modalImage.src = post.image;
-                modalTitle.textContent = post.title;
-                modalBody.innerHTML = post.content;
-                modal.classList.add('open');
-                setTimeout(() => modalContainer.classList.remove('scale-95', 'opacity-0'), 10);
-            };
-            const closeModal = () => {
-                modalContainer.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => modal.classList.remove('open'), 300);
-            };
+const Blog = ({ setSelectedPost }) => {
+  return (
+    <section id="blog" className="py-24 bg-gray-800">
+      <div className="container mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold text-white">Blog & <span className="text-blue-400">Insights</span></h2>
+          <p className="text-lg text-gray-400 mt-4 max-w-2xl mx-auto">Mantenha-se atualizado com as últimas tendências, dicas e artigos sobre carreira e gestão de RH.</p>
+        </motion.div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {blogPosts.map((post, i) => (
+            <motion.div
+              key={post.id}
+              className="bg-gray-900/50 rounded-xl overflow-hidden flex flex-col border border-white/10 hover:border-blue-500/50 transition-colors cursor-pointer"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
+              onClick={() => setSelectedPost(post)}
+            >
+              <div className="overflow-hidden">
+                <motion.img 
+                    src={post.image} 
+                    alt={post.title} 
+                    className="w-full h-48 object-cover"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.3 }}
+                 />
+              </div>
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold text-white mb-3 flex-grow">{post.title}</h3>
+                <p className="text-gray-400 mb-6 text-sm">{post.summary}</p>
+                <div className="mt-auto self-start font-semibold text-blue-400 hover:text-blue-300 transition-colors flex items-center group">
+                  Ler mais <ChevronRight size={20} className="ml-1 transition-transform group-hover:translate-x-1" />
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
 
-            blogPostsContainer.addEventListener('click', (e) => {
-                const button = e.target.closest('.read-more-btn');
-                if (button) {
-                    const postId = parseInt(button.dataset.id);
-                    const post = postsData.find(p => p.id === postId);
-                    if (post) openModal(post);
-                }
-            });
-            modalCloseBtn.addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => (e.target === modal) && closeModal());
-        });
-    </script>
-</body>
-</html>
+const BlogPostModal = ({ post, setSelectedPost }) => {
+  if (!post) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={() => setSelectedPost(null)}
+      >
+        <motion.div
+          className="bg-gray-900 border border-white/10 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative"
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 50, opacity: 0 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button onClick={() => setSelectedPost(null)} className="absolute top-4 right-4 text-gray-400 hover:text-white z-10">
+            <X size={24} />
+          </button>
+          <img src={post.image} alt={post.title} className="w-full h-64 object-cover rounded-t-2xl opacity-70" />
+          <div className="p-8">
+            <h2 className="text-4xl font-bold text-white mb-6">{post.title}</h2>
+            <div className="prose prose-invert prose-lg text-gray-300" dangerouslySetInnerHTML={{ __html: post.content }}>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+const Contato = () => (
+    <section id="contato" className="py-24 bg-gray-900 relative overflow-hidden">
+      <div className="container mx-auto px-6 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white">Entre em <span className="text-blue-400">Contato</span></h2>
+            <p className="text-lg text-gray-400 mt-4 max-w-2xl mx-auto">Tem uma dúvida ou precisa de uma solução personalizada? Fale conosco!</p>
+          </motion.div>
+  
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.8 }}
+            >
+                <form action="mailto:contato@sucessorh.com.br" method="post" encType="text/plain" className="space-y-6">
+                    <input type="text" placeholder="Seu nome" name="Nome" required className="w-full p-4 bg-gray-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                    <input type="email" placeholder="Seu e-mail" name="Email" required className="w-full p-4 bg-gray-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus-ring-blue-500"/>
+                    <textarea placeholder="Sua mensagem" rows="5" name="Mensagem" required className="w-full p-4 bg-gray-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    <button type="submit" className="w-full py-4 px-8 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors transform hover:scale-105">
+                        Enviar Mensagem
+                    </button>
+                </form>
+            </motion.div>
+
+            <motion.div
+                className="space-y-6"
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.8 }}
+            >
+                <div className="flex items-center text-lg space-x-4"><Mail className="text-blue-400"/><span className="text-gray-300">contato@sucessorh.com.br</span></div>
+                <div className="flex items-center text-lg space-x-4"><Phone className="text-blue-400"/><span className="text-gray-300">(92) 3232-3232</span></div>
+                <div className="flex items-center text-lg space-x-4"><MapPin className="text-blue-400"/><span className="text-gray-300">Av. Tefé, 4265 - Distrito Industrial I, Manaus - AM</span></div>
+                <div className="w-full h-80 rounded-lg shadow-lg overflow-hidden border-2 border-white/10 mt-4">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3983.829853925206!2d-59.97237868524234!3d-3.120677997701777!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x926c0800b70d599b%3A0x6b42b4d457b01b22!2sAv.%20Tef%C3%A9%2C%204265%20-%20Distrito%20Industrial%20I%2C%20Manaus%20-%20AM%2C%2069075-843!5e0!3m2!1spt-BR!2sbr!4v1663363573824!5m2!1spt-BR!2sbr" width="100%" height="100%" style={{ border:0, filter: 'invert(90%) grayscale(80%)' }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </motion.div>
+          </div>
+      </div>
+    </section>
+  );
+
+const Footer = () => (
+  <footer className="bg-[#1C4D96] text-white py-12">
+    <div className="container mx-auto px-6 text-center">
+      <div className="flex justify-center mb-6">
+        <img src="https://i.postimg.cc/h4Vf5H4z/logosucesso.png" alt="Logo Sucesso RH" className="h-6" />
+      </div>
+      <div className="flex justify-center space-x-6 mb-6">
+        {['Home', 'Quem Somos', 'Serviços', 'Vagas', 'Blog', 'Contato'].map(link => (
+          <a key={link} href={`#${link.toLowerCase().replace(' ', '-')}`} className="text-blue-200 hover:underline">{link}</a>
+        ))}
+      </div>
+      <p className="text-blue-200">&copy; {new Date().getFullYear()} Sucesso RH. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+);
 
 
+export default function App() {
+  const [selectedPost, setSelectedPost] = useState(null);
+
+  useEffect(() => {
+    // Adiciona classe ao body quando o modal está aberto para travar o scroll
+    if (selectedPost) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+  }, [selectedPost]);
+
+  // CSS para a animação do carrossel
+  const animationStyle = `
+    @keyframes infinite-scroll {
+        from { transform: translateX(0); }
+        to { transform: translateX(-50%); }
+    }
+    .animate-infinite-scroll {
+        animation: infinite-scroll 40s linear infinite;
+    }
+  `;
+
+  return (
+    <div className="bg-gray-900 text-gray-200 font-sans antialiased">
+      <style>{animationStyle}</style>
+      <Header />
+      <main>
+        <Hero />
+        <QuemSomos />
+        <Servicos />
+        <ConhecimentoCapsulas />
+        <CoracaoRH />
+        <Canais />
+        <Blog setSelectedPost={setSelectedPost} />
+        <Vagas />
+        <Contato />
+      </main>
+      <Footer />
+
+      <AnimatePresence>
+        {selectedPost && (
+          <BlogPostModal post={selectedPost} setSelectedPost={setSelectedPost} />
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
